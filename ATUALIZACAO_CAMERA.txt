@@ -1,0 +1,1 @@
+Controles: WASD/setas; Shift corre; segurar botao direito do mouse e arrastar gira camera; roda do mouse aproxima/afasta; toque arrastando lado direito gira camera. Movimento visual do Cute Boy ainda nao e animacao esqueletica. A importacao e o teste final devem ocorrer no Godot 4.7.2.

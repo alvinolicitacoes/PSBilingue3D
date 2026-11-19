@@ -1,0 +1,20 @@
+PSBilingue 3D — Seleção inicial de modelos
+
+Organização realizada a partir do arquivo enviado "para analisar.zip".
+
+ESCOLHAS
+- personagens/pietro_candidato: modelo infantil, estático (sem esqueleto ou animação). Precisa ser avaliado visualmente antes de usá-lo como Pietro.
+- personagens/personagem_animado_alternativo: cinco GLB com esqueleto e uma animação cada (idle, run, sit, T-pose, walk). NÃO são animações transferíveis automaticamente ao modelo cute-boy.
+- atividades/animais_e_brinquedos: animais leves para exercícios e jogos; Dog_01 não foi confirmado como bulldog francês e NÃO substitui Thor automaticamente.
+- cenario/cidade_cartoon: seleção de edifícios, ruas, vegetação e decoração. Inclui imagens auxiliares originais do pacote.
+- cenario/natureza_e_ruas: GLB com ruas, árvores e edifícios (Untitled.glb identificado pelos nomes internos dos nós).
+
+NÃO INCLUÍDOS
+- Unity_2022/Unity_6 *.unitypackage: formato específico do Unity e redundante em relação aos GLBs.
+- arquivos RAR (LowPoly_City_01fbx, Readyfbx, textures, HDRI): conteúdo interno ainda não verificado; mantidos intactos no ZIP original.
+- Cartoon_City_Free.glb e One_file_assets.glb: cenas completas duplicam objetos do pacote; preferidos os GLBs individuais para compor o mapa com controle de desempenho.
+- variações repetidas de lixeiras, carros e outros objetos, para evitar excesso de ativos.
+
+ATENÇÃO
+Este ZIP é uma biblioteca SELECIONADA, NÃO um projeto Godot integrado. A importação efetiva, o visual e as animações precisam ser testados no Godot 4.7. Nenhum modelo foi validado em execução no Android.
+Não foram encontradas informações de licença suficientes dentro dos arquivos para certificar direitos de redistribuição. Confira as licenças nas páginas de origem.

@@ -1,0 +1,307 @@
+[
+  {
+    "path": "personagens/pietro_candidato/base_basic_shaded.glb",
+    "source": "cute-boy.zip:source/base_basic_shaded.glb",
+    "bytes": 3504816
+  },
+  {
+    "path": "personagens/pietro_candidato/gltf_embedded_0.png",
+    "source": "cute-boy.zip:textures/gltf_embedded_0.png",
+    "bytes": 1747160
+  },
+  {
+    "path": "personagens/personagem_animado_alternativo/Breathing Idle.glb",
+    "source": "glb+with+animations.zip:glb/Breathing Idle.glb",
+    "bytes": 2282792
+  },
+  {
+    "path": "personagens/personagem_animado_alternativo/Running.glb",
+    "source": "glb+with+animations.zip:glb/Running.glb",
+    "bytes": 2154212
+  },
+  {
+    "path": "personagens/personagem_animado_alternativo/Sitting.glb",
+    "source": "glb+with+animations.zip:glb/Sitting.glb",
+    "bytes": 2206384
+  },
+  {
+    "path": "personagens/personagem_animado_alternativo/T-Pose.glb",
+    "source": "glb+with+animations.zip:glb/T-Pose.glb",
+    "bytes": 2143520
+  },
+  {
+    "path": "personagens/personagem_animado_alternativo/Walking.glb",
+    "source": "glb+with+animations.zip:glb/Walking.glb",
+    "bytes": 2158172
+  },
+  {
+    "path": "atividades/animais_e_brinquedos/Bear_01.glb",
+    "source": "Claw_Machine_Free_glb.zip:Claw_Machine_Free_glb/Bear_01.glb",
+    "bytes": 543800
+  },
+  {
+    "path": "atividades/animais_e_brinquedos/Cat_01.glb",
+    "source": "Claw_Machine_Free_glb.zip:Claw_Machine_Free_glb/Cat_01.glb",
+    "bytes": 544784
+  },
+  {
+    "path": "atividades/animais_e_brinquedos/Chick_01.glb",
+    "source": "Claw_Machine_Free_glb.zip:Claw_Machine_Free_glb/Chick_01.glb",
+    "bytes": 552436
+  },
+  {
+    "path": "atividades/animais_e_brinquedos/Crocodile_01.glb",
+    "source": "Claw_Machine_Free_glb.zip:Claw_Machine_Free_glb/Crocodile_01.glb",
+    "bytes": 554528
+  },
+  {
+    "path": "atividades/animais_e_brinquedos/Dog_01.glb",
+    "source": "Claw_Machine_Free_glb.zip:Claw_Machine_Free_glb/Dog_01.glb",
+    "bytes": 568536
+  },
+  {
+    "path": "atividades/animais_e_brinquedos/Elephant_01.glb",
+    "source": "Claw_Machine_Free_glb.zip:Claw_Machine_Free_glb/Elephant_01.glb",
+    "bytes": 551400
+  },
+  {
+    "path": "atividades/animais_e_brinquedos/Fox_01.glb",
+    "source": "Claw_Machine_Free_glb.zip:Claw_Machine_Free_glb/Fox_01.glb",
+    "bytes": 558076
+  },
+  {
+    "path": "atividades/animais_e_brinquedos/Koala_01.glb",
+    "source": "Claw_Machine_Free_glb.zip:Claw_Machine_Free_glb/Koala_01.glb",
+    "bytes": 555836
+  },
+  {
+    "path": "atividades/animais_e_brinquedos/Lion_01.glb",
+    "source": "Claw_Machine_Free_glb.zip:Claw_Machine_Free_glb/Lion_01.glb",
+    "bytes": 550668
+  },
+  {
+    "path": "atividades/animais_e_brinquedos/Panda_01.glb",
+    "source": "Claw_Machine_Free_glb.zip:Claw_Machine_Free_glb/Panda_01.glb",
+    "bytes": 557208
+  },
+  {
+    "path": "atividades/animais_e_brinquedos/Penguin_01.glb",
+    "source": "Claw_Machine_Free_glb.zip:Claw_Machine_Free_glb/Penguin_01.glb",
+    "bytes": 570408
+  },
+  {
+    "path": "atividades/animais_e_brinquedos/Pig_01.glb",
+    "source": "Claw_Machine_Free_glb.zip:Claw_Machine_Free_glb/Pig_01.glb",
+    "bytes": 546412
+  },
+  {
+    "path": "atividades/animais_e_brinquedos/Rabbit_01.glb",
+    "source": "Claw_Machine_Free_glb.zip:Claw_Machine_Free_glb/Rabbit_01.glb",
+    "bytes": 545232
+  },
+  {
+    "path": "atividades/animais_e_brinquedos/Shark_01.glb",
+    "source": "Claw_Machine_Free_glb.zip:Claw_Machine_Free_glb/Shark_01.glb",
+    "bytes": 557304
+  },
+  {
+    "path": "atividades/animais_e_brinquedos/Unicorn_01.glb",
+    "source": "Claw_Machine_Free_glb.zip:Claw_Machine_Free_glb/Unicorn_01.glb",
+    "bytes": 566116
+  },
+  {
+    "path": "cenario/cidade_cartoon/Banners.png",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Banners.png",
+    "bytes": 2168405
+  },
+  {
+    "path": "cenario/cidade_cartoon/Bush_06.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Bush_06.glb",
+    "bytes": 366548
+  },
+  {
+    "path": "cenario/cidade_cartoon/Bush_07.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Bush_07.glb",
+    "bytes": 366548
+  },
+  {
+    "path": "cenario/cidade_cartoon/Bush_10.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Bush_10.glb",
+    "bytes": 351340
+  },
+  {
+    "path": "cenario/cidade_cartoon/Bus_Stop_02.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Bus_Stop_02.glb",
+    "bytes": 367552
+  },
+  {
+    "path": "cenario/cidade_cartoon/Car_06.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Car_06.glb",
+    "bytes": 818952
+  },
+  {
+    "path": "cenario/cidade_cartoon/Car_13.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Car_13.glb",
+    "bytes": 848708
+  },
+  {
+    "path": "cenario/cidade_cartoon/Eco_Building_Grid.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Eco_Building_Grid.glb",
+    "bytes": 929384
+  },
+  {
+    "path": "cenario/cidade_cartoon/Eco_Building_Slope.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Eco_Building_Slope.glb",
+    "bytes": 639160
+  },
+  {
+    "path": "cenario/cidade_cartoon/Eco_Building_Terrace.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Eco_Building_Terrace.glb",
+    "bytes": 865132
+  },
+  {
+    "path": "cenario/cidade_cartoon/Fountain_03.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Fountain_03.glb",
+    "bytes": 386656
+  },
+  {
+    "path": "cenario/cidade_cartoon/Graffiti.png",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Graffiti.png",
+    "bytes": 152340
+  },
+  {
+    "path": "cenario/cidade_cartoon/Palm_03.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Palm_03.glb",
+    "bytes": 411020
+  },
+  {
+    "path": "cenario/cidade_cartoon/Regular_Building_TwistedTower_Large.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Regular_Building_TwistedTower_Large.glb",
+    "bytes": 835812
+  },
+  {
+    "path": "cenario/cidade_cartoon/Roads.png",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Roads.png",
+    "bytes": 1605265
+  },
+  {
+    "path": "cenario/cidade_cartoon/road_001.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/road_001.glb",
+    "bytes": 1958912
+  },
+  {
+    "path": "cenario/cidade_cartoon/road_003.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/road_003.glb",
+    "bytes": 1961292
+  },
+  {
+    "path": "cenario/cidade_cartoon/road_009.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/road_009.glb",
+    "bytes": 1958912
+  },
+  {
+    "path": "cenario/cidade_cartoon/road_013.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/road_013.glb",
+    "bytes": 1964220
+  },
+  {
+    "path": "cenario/cidade_cartoon/road_019.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/road_019.glb",
+    "bytes": 1962164
+  },
+  {
+    "path": "cenario/cidade_cartoon/road_020.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/road_020.glb",
+    "bytes": 1958996
+  },
+  {
+    "path": "cenario/cidade_cartoon/road_022.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/road_022.glb",
+    "bytes": 1958996
+  },
+  {
+    "path": "cenario/cidade_cartoon/Road_Signs.png",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Road_Signs.png",
+    "bytes": 27856
+  },
+  {
+    "path": "cenario/cidade_cartoon/scrolling text.png",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/scrolling text.png",
+    "bytes": 45301
+  },
+  {
+    "path": "cenario/cidade_cartoon/Set_B_Tiles_01.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Set_B_Tiles_01.glb",
+    "bytes": 11379780
+  },
+  {
+    "path": "cenario/cidade_cartoon/Set_B_Tiles_04.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Set_B_Tiles_04.glb",
+    "bytes": 11376828
+  },
+  {
+    "path": "cenario/cidade_cartoon/Set_B_Tiles_05.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Set_B_Tiles_05.glb",
+    "bytes": 11375100
+  },
+  {
+    "path": "cenario/cidade_cartoon/Set_B_Tiles_06.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Set_B_Tiles_06.glb",
+    "bytes": 11379776
+  },
+  {
+    "path": "cenario/cidade_cartoon/Set_B_Tiles_09.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Set_B_Tiles_09.glb",
+    "bytes": 11021376
+  },
+  {
+    "path": "cenario/cidade_cartoon/Signboard_01.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Signboard_01.glb",
+    "bytes": 708520
+  },
+  {
+    "path": "cenario/cidade_cartoon/Textures1.png",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Textures1.png",
+    "bytes": 349167
+  },
+  {
+    "path": "cenario/cidade_cartoon/Tiles_2.png",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Tiles_2.png",
+    "bytes": 5449783
+  },
+  {
+    "path": "cenario/cidade_cartoon/Tiles_2_Normal.png",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Tiles_2_Normal.png",
+    "bytes": 2224210
+  },
+  {
+    "path": "cenario/cidade_cartoon/Tiles_2_Roughness.png",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Tiles_2_Roughness.png",
+    "bytes": 2914272
+  },
+  {
+    "path": "cenario/cidade_cartoon/traffic_light_001.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/traffic_light_001.glb",
+    "bytes": 704948
+  },
+  {
+    "path": "cenario/cidade_cartoon/traffic_light_002.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/traffic_light_002.glb",
+    "bytes": 857036
+  },
+  {
+    "path": "cenario/cidade_cartoon/Trash_Can_04.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Trash_Can_04.glb",
+    "bytes": 353256
+  },
+  {
+    "path": "cenario/cidade_cartoon/Van.glb",
+    "source": "Cartoon_City_Free_glb.zip:Separate_assets_glb/Van.glb",
+    "bytes": 827508
+  },
+  {
+    "path": "cenario/natureza_e_ruas/Untitled.glb",
+    "source": "Untitled.glb",
+    "bytes": 7404188
+  }
+]
