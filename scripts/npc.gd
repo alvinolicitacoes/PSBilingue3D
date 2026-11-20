@@ -237,15 +237,22 @@ func tick(delta: float, player_pos: Vector3) -> void:
 		if _bubble_t <= 0.0:
 			bubble.visible = false
 
-## Conversa: mostra balão e fala a frase em inglês. Devolve a frase.
-func talk() -> Dictionary:
+## Seleciona uma frase sem repetir até completar o ciclo embaralhado.
+func next_phrase() -> Dictionary:
+	if _order.is_empty():
+		for i in range(all_phrases().size()):
+			_order.append(i)
+		_order.shuffle()
 	var idx: int = _order.pop_front()
-	_order.append(idx)
 	var p: Dictionary = all_phrases()[idx]
-	bubble.text = "%s\n(%s)" % [p["en"], p["pt"]]
+	bubble.text = "%s\\n(%s)" % [p["en"], p["pt"]]
 	bubble.visible = true
 	_bubble_t = 6.0
 	if kind != "sitter":
 		hero.wave()
+	return p
+
+func talk() -> Dictionary:
+	var p := next_phrase()
 	PSAudio.speak(str(p["en"]), "en")
 	return p
