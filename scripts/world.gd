@@ -703,7 +703,7 @@ func _open_game(i: int) -> void:
 	games.level_won.connect(_on_level_won)
 	hud.visible = false
 	prompt_btn.visible = false
-	PSAudio.ducked(true)
+	PSAudio.inst.ducked(true)
 
 func _close_game() -> void:
 	if games == null:
@@ -712,7 +712,7 @@ func _close_game() -> void:
 	games = null
 	hud.visible = true
 	PSAudio.music("music_city")
-	PSAudio.ducked(false)
+	PSAudio.inst.ducked(false)
 	_refresh_hud()
 	if pending_cheer:
 		pending_cheer = false
