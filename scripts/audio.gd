@@ -66,6 +66,8 @@ func _setup_tts() -> void:
 		if lang.begins_with("pt") and (tts_voice_pt == "" or lang.begins_with("pt_br")):
 			tts_voice_pt = str(d.get("id", ""))
 	tts_available = tts_voice_en != ""
+	if not tts_available:
+		push_warning("Nenhuma voz inglesa encontrada no sistema. Instale uma voz English em Configurações > Hora e idioma > Fala.")
 
 func _load(sound: String) -> AudioStream:
 	if _cache.has(sound):
@@ -156,13 +158,16 @@ func _set_ambient(on: bool) -> void:
 		_fountain.stop()
 
 func _speak(text: String, lang: String) -> void:
-	if not tts_available or not tts_enabled:
+	if not tts_enabled:
+		return
+	if not tts_available:
+		push_warning("Pronúncia indisponível: instale uma voz inglesa no sistema operacional.")
 		return
 	var voice := tts_voice_en if lang == "en" else tts_voice_pt
 	if voice == "":
 		voice = tts_voice_en
 	DisplayServer.tts_stop()
-	DisplayServer.tts_speak(text, voice, 100, 1.05, 0.85)
+	DisplayServer.tts_speak(text, voice, 100, 1.0, 0.9, 0, true)
 
 # ---- volume --------------------------------------------------------------------
 func set_music_volume(v: float) -> void:
