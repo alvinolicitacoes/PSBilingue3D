@@ -245,7 +245,7 @@ func next_phrase() -> Dictionary:
 		_order.shuffle()
 	var idx: int = _order.pop_front()
 	var p: Dictionary = all_phrases()[idx]
-	bubble.text = "%s\\n(%s)" % [p["en"], p["pt"]]
+	bubble.text = "%s\n(%s)" % [p["en"], p["pt"]]
 	bubble.visible = true
 	_bubble_t = 6.0
 	if kind != "sitter":
