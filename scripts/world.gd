@@ -307,6 +307,7 @@ func _build_ui() -> void:
 	tr.add_child(_hud_button("Mapa", Color("2fa7b8"), _open_map, 110))
 	tr.add_child(_hud_button("Roupas", Color("ee6bd0"), _open_wardrobe, 120))
 	tr.add_child(_hud_button("Opções", Color("6c7a9c"), _open_options, 120))
+	tr.add_child(_hud_button("🎤 Pronúncia", Color("518e7b"), _open_pronunciation, 165))
 	# minimapa
 	minimap = PSUI.MiniMap.new()
 	minimap.set_anchors_preset(Control.PRESET_TOP_RIGHT)
@@ -700,6 +701,20 @@ func _enter_place(i: int) -> void:
 	await _fade(1.0, 0.25)
 	_open_game(i)
 	await _fade(0.0, 0.25)
+
+func _open_pronunciation() -> void:
+	if games != null or overlay != null:
+		return
+	var practice := PSPronunciation.new()
+	ui_root.add_child(practice)
+	ui_root.move_child(fade_rect, ui_root.get_child_count() - 1)
+	hud.visible = false
+	prompt_btn.visible = false
+	practice.closed.connect(func():
+		practice.queue_free()
+		hud.visible = true
+		prompt_btn.visible = true
+	)
 
 func _open_game(i: int) -> void:
 	var pl: Dictionary = PSConfig.PLACES[i]
