@@ -24,6 +24,7 @@ var _record_button: Button
 var _listen_button: Button
 var _evaluate_button: Button
 var _recognizers: Dictionary = {}
+var _effect_index := -1
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -115,6 +116,7 @@ func _setup_microphone() -> void:
 		AudioServer.set_bus_mute(_bus_index, true)
 		_recording = AudioEffectRecord.new()
 		AudioServer.add_bus_effect(_bus_index, _recording)
+		_effect_index = AudioServer.get_bus_effect_count(_bus_index) - 1
 		_microphone = AudioStreamPlayer.new()
 		_microphone.bus = "Gravacao"
 		_microphone.stream = AudioStreamMicrophone.new()
@@ -124,6 +126,14 @@ func _setup_microphone() -> void:
 	else:
 		_record_button.disabled = true
 		_status.text = "Microfone indisponível. Verifique a permissão de acesso ao microfone."
+
+func _exit_tree() -> void:
+	_stop_record()
+	if _bus_index >= 0 and _recording != null:
+		for i in range(AudioServer.get_bus_effect_count(_bus_index) - 1, -1, -1):
+			if AudioServer.get_bus_effect(_bus_index, i) == _recording:
+				AudioServer.remove_bus_effect(_bus_index, i)
+				break
 
 func _select_language(lang: String) -> void:
 	_language = lang
@@ -150,7 +160,7 @@ func _show_phrase() -> void:
 	_evaluate_button.disabled = true
 	_title.text = "%d/10 • %s" % [_index + 1, str(_phrases[_index][_language])]
 	_translation.text = str(_phrases[_index]["pt" if _language == "en" else "en"])
-	_status.text = "Ouça, grave sua voz e compare. A avaliação é feita pela própria criança com ajuda de um adulto."
+	_status.text = "Ouça, grave sua voz e compare. O reconhecimento de palavras é automático quando o motor offline estiver instalado."
 
 func _toggle_record() -> void:
 	if _recording_active:
@@ -160,6 +170,7 @@ func _toggle_record() -> void:
 		return
 	_recorded = null
 	_listen_button.disabled = true
+	_evaluate_button.disabled = true
 	_recording.set_recording_active(true)
 	_microphone.play()
 	_recording_active = true
@@ -200,7 +211,7 @@ func _evaluate_recording() -> void:
 		return
 	var model_path := "res://assets/speech/vosk-model-small-en-us-0.15.vosk" if _language == "en" else "res://assets/speech/vosk-model-small-pt-0.3.vosk"
 	if not ResourceLoader.exists(model_path):
-		_status.text = "Modelo inglês offline ausente. A correção não pode ser executada."
+		_status.text = "Modelo offline ausente para o idioma escolhido."
 		return
 	var model: Resource = load(model_path)
 	var recognizer: Object = ClassDB.instantiate("VoskRecognizer")
@@ -216,6 +227,8 @@ func _evaluate_recording() -> void:
 	var recognized := str(result.get("text", ""))
 	var expected := str(_phrases[_index][_language])
 	var score := _word_similarity(expected, recognized)
+	if not recognized.strip_edges().is_empty():
+		PSProgress.pronunciation_result(_language, _level + 1, expected, score)
 	if recognized.strip_edges().is_empty():
 		_status.text = "Não consegui identificar as palavras. Fale mais perto do microfone e tente novamente."
 	elif score >= 0.85:
@@ -225,7 +238,7 @@ func _evaluate_recording() -> void:
 
 func _word_similarity(expected: String, recognized: String) -> float:
 	var clean := RegEx.new()
-	clean.compile("[^a-z0-9 ]")
+	clean.compile("[^a-z0-9áàâãéêíóôõúüç ]")
 	var a := clean.sub(expected.to_lower(), "", true).split(" ", false)
 	var b := clean.sub(recognized.to_lower(), "", true).split(" ", false)
 	if a.is_empty() or b.is_empty():
