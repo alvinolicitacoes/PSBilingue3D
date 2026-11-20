@@ -224,12 +224,12 @@ func _build_environment() -> void:
 	sky.sky_material = sky_mat
 	env.sky = sky
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
-	env.ambient_light_energy = 0.9
+	env.ambient_light_energy = 0.65
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	env.fog_enabled = true
 	env.fog_density = 0.0018
 	env.glow_enabled = true
-	env.glow_intensity = 0.5
+	env.glow_intensity = 0.18
 	we.environment = env
 	add_child(we)
 	sun = DirectionalLight3D.new()
@@ -246,7 +246,7 @@ func _apply_time() -> void:
 	night_amt = 1.0 - day
 	var elev := lerpf(10.0, 62.0, clampf(s, 0.0, 1.0))
 	sun.rotation_degrees = Vector3(-elev, -50.0 + time_of_day * 260.0, 0.0)
-	sun.light_energy = lerpf(0.18, 1.15, day)
+	sun.light_energy = lerpf(0.18, 0.85, day)
 	sun.light_color = Color("fff3e0").lerp(Color("ff9a5a"), warm * 0.8).lerp(Color("8aa4ff"), night_amt)
 	var top := Color("4ea3ff").lerp(Color("6a5acd"), warm * 0.6).lerp(Color("0b1030"), night_amt)
 	var hor := Color("c4e6ff").lerp(Color("ffb27a"), warm * 0.75).lerp(Color("2a3566"), night_amt)
@@ -254,7 +254,7 @@ func _apply_time() -> void:
 	sky_mat.sky_horizon_color = hor
 	sky_mat.ground_horizon_color = hor
 	sky_mat.ground_bottom_color = hor.darkened(0.3)
-	env.ambient_light_energy = lerpf(0.4, 0.95, day)
+	env.ambient_light_energy = lerpf(0.35, 0.68, day)
 	env.fog_light_color = hor
 	for m in _night_mats:
 		m.emission_energy_multiplier = night_amt * 2.2
@@ -276,28 +276,28 @@ func _build_ground() -> void:
 	water.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(water)
 	_cyl(self, 66.0, 62.0, 7.0, Vector3(0, -3.55, 0), Color("8b6b4a"), 48)
-	_cyl(self, PSConfig.ISLAND_R, PSConfig.ISLAND_R, 0.2, Vector3(0, -0.12, 0), Color("f0dca0"), 64)
-	_cyl(self, 60.0, 60.0, 0.2, Vector3(0, -0.1, 0), Color("6cbf4f"), 64)
+	_cyl(self, PSConfig.ISLAND_R, PSConfig.ISLAND_R, 0.2, Vector3(0, -0.12, 0), Color("a9815a"), 64)
+	_cyl(self, 60.0, 60.0, 0.2, Vector3(0, -0.1, 0), Color("8b7658"), 64)
 	_collider_box(self, Vector3(170, 1, 170), Vector3(0, -0.5, 0))
 
 func _disc(r: float, top: float, color: Color) -> void:
 	_cyl(self, r, r, 0.05, Vector3(0, top - 0.025, 0), color, 72)
 
 func _build_roads() -> void:
-	_disc(PSConfig.SIDEWALK_OUT, 0.01, Color("ddd7c9"))
-	_disc(PSConfig.ROAD_OUT, 0.02, Color("4b4f58"))
-	_disc(PSConfig.ROAD_IN, 0.03, Color("ddd7c9"))
-	_disc(PSConfig.PARK_R, 0.04, Color("80d05e"))
-	_disc(7.2, 0.05, Color("cfc7b2"))
-	_disc(6.4, 0.06, Color("e9e2cf"))
+	_disc(PSConfig.SIDEWALK_OUT, 0.01, Color("92979b"))
+	_disc(PSConfig.ROAD_OUT, 0.02, Color("343940"))
+	_disc(PSConfig.ROAD_IN, 0.03, Color("92979b"))
+	_disc(PSConfig.PARK_R, 0.04, Color("76a16a"))
+	_disc(7.2, 0.05, Color("a7a5a0"))
+	_disc(6.4, 0.06, Color("b8b6b0"))
 	# trilhas radiais
 	for i in range(12):
 		var a := deg_to_rad(float(i) * 30.0)
 		var yaw := PI - a
 		var mid_in := Vector3(sin(a) * 14.0, 0.05, -cos(a) * 14.0)
-		_box(self, Vector3(3.0, 0.03, 15.0), mid_in, Color("efe2b8"), Vector3(0, yaw, 0))
+		_box(self, Vector3(3.0, 0.03, 15.0), mid_in, Color("9b9d9d"), Vector3(0, yaw, 0))
 		var mid_out := Vector3(sin(a) * 31.3, 0.025, -cos(a) * 31.3)
-		_box(self, Vector3(3.6, 0.03, 3.6), mid_out, Color("efe2b8"), Vector3(0, yaw, 0))
+		_box(self, Vector3(3.6, 0.03, 3.6), mid_out, Color("9b9d9d"), Vector3(0, yaw, 0))
 	# faixas de pedestres e linha central
 	var stripes: Array = []
 	for i in range(12):
@@ -309,7 +309,7 @@ func _build_roads() -> void:
 			stripes.append(Transform3D(Basis(Vector3.UP, PI - a2), Vector3(p.x, 0.032, p.z)))
 	var sm := BoxMesh.new()
 	sm.size = Vector3(0.4, 0.02, 4.6)
-	_multi(sm, _mat(Color("f5f5f5")), stripes)
+	_multi(sm, _mat(Color("deded9")), stripes)
 	var dashes: Array = []
 	for k in range(40):
 		var a3 := deg_to_rad(float(k) * 9.0 + 4.5)
