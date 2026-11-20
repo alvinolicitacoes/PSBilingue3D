@@ -985,7 +985,7 @@ func _sudoku_check_win() -> void:
 # SOLETRAÇÃO
 # =====================================================================================================
 func _start_spelling() -> void:
-	_words = PSContent.spelling_words(level, 8)
+	_words = PSContent.spelling_words(level, 10)
 	_wi = 0
 	_mistakes = 0
 	state = "spelling"
