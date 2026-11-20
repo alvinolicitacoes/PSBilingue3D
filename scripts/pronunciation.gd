@@ -21,6 +21,8 @@ var _translation: Label
 var _status: Label
 var _record_button: Button
 var _listen_button: Button
+var _evaluate_button: Button
+var _recognizers: Dictionary = {}
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -73,6 +75,11 @@ func _ready() -> void:
 	_listen_button.disabled = true
 	stack.add_child(_listen_button)
 	_listen_button.pressed.connect(_listen)
+	_evaluate_button = Button.new()
+	_evaluate_button.text = "✅ Corrigir minha fala"
+	_evaluate_button.disabled = true
+	stack.add_child(_evaluate_button)
+	_evaluate_button.pressed.connect(_evaluate_recording)
 	_status = PSUI.label("Ouça, fale e compare sua gravação com o modelo.", 18, NAVY)
 	_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	stack.add_child(_status)
@@ -128,6 +135,7 @@ func _show_phrase() -> void:
 		return
 	_recorded = null
 	_listen_button.disabled = true
+	_evaluate_button.disabled = true
 	_title.text = "%d/10 • %s" % [_index + 1, str(_phrases[_index]["en"])]
 	_translation.text = str(_phrases[_index]["pt"])
 	_status.text = "Ouça, grave sua voz e compare. A avaliação é feita pela própria criança com ajuda de um adulto."
@@ -155,6 +163,7 @@ func _stop_record() -> void:
 	_recording_active = false
 	_record_button.text = "🎤 Gravar novamente"
 	_listen_button.disabled = _recorded == null
+	_evaluate_button.disabled = _recorded == null or not ClassDB.class_exists("VoskRecognizer") or not ClassDB.class_exists("VoskModel")
 	_status.text = "Gravação concluída. Ouça sua voz e compare com a pronúncia."
 
 func _listen() -> void:
@@ -170,3 +179,53 @@ func _next() -> void:
 		return
 	_index = (_index + 1) % _phrases.size()
 	_show_phrase()
+
+func _evaluate_recording() -> void:
+	if _recorded == null:
+		return
+	if not ClassDB.class_exists("VoskRecognizer") or not ClassDB.class_exists("VoskModel"):
+		_status.text = "Reconhecimento indisponível: instale o gdvosk e os modelos offline."
+		return
+	var language := "en"
+	var model_path := "res://assets/speech/vosk-model-small-en-us-0.15.vosk"
+	if not ResourceLoader.exists(model_path):
+		_status.text = "Modelo inglês offline ausente. A correção não pode ser executada."
+		return
+	var model: Resource = load(model_path)
+	var recognizer: Object = ClassDB.instantiate("VoskRecognizer")
+	if recognizer == null or model == null:
+		_status.text = "Não foi possível iniciar o reconhecimento de fala."
+		return
+	var error_code: int = recognizer.call("setup", model, int(_recorded.mix_rate), null)
+	if error_code != OK:
+		_status.text = "Falha ao iniciar o reconhecedor."
+		return
+	recognizer.call("accept_stream", _recorded)
+	var result: Dictionary = recognizer.call("get_final_result")
+	var recognized := str(result.get("text", ""))
+	var expected := str(_phrases[_index]["en"])
+	var score := _word_similarity(expected, recognized)
+	if recognized.strip_edges().is_empty():
+		_status.text = "Não consegui identificar as palavras. Fale mais perto do microfone e tente novamente."
+	elif score >= 0.85:
+		_status.text = "Muito bem! Entendi: '%s'. Correspondência de palavras: %d%%." % [recognized, roundi(score * 100)]
+	else:
+		_status.text = "Ouvi: '%s'. A frase era: '%s'. Correspondência de palavras: %d%%. Vamos tentar novamente!" % [recognized, expected, roundi(score * 100)]
+
+func _word_similarity(expected: String, recognized: String) -> float:
+	var clean := RegEx.new()
+	clean.compile("[^a-z0-9 ]")
+	var a := clean.sub(expected.to_lower(), "", true).split(" ", false)
+	var b := clean.sub(recognized.to_lower(), "", true).split(" ", false)
+	if a.is_empty() or b.is_empty():
+		return 0.0
+	var previous: Array[int] = []
+	for j in range(b.size() + 1):
+		previous.append(j)
+	for i in range(a.size()):
+		var current: Array[int] = [i + 1]
+		for j in range(b.size()):
+			var cost := 0 if a[i] == b[j] else 1
+			current.append(mini(mini(previous[j + 1] + 1, current[j] + 1), previous[j] + cost))
+		previous = current
+	return clampf(1.0 - float(previous[b.size()]) / float(maxi(a.size(), b.size())), 0.0, 1.0)
