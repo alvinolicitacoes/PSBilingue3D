@@ -278,22 +278,22 @@ class HoldButton extends Control:
 			var t := e as InputEventScreenTouch
 			if t.pressed and _touch == -999:
 				_touch = t.index
-				_set(true)
+				_set_held(true)
 			elif not t.pressed and t.index == _touch:
 				_touch = -999
-				_set(false)
+				_set_held(false)
 		elif e is InputEventMouseButton:
 			var mb := e as InputEventMouseButton
 			if mb.device == InputEvent.DEVICE_ID_EMULATION or mb.button_index != MOUSE_BUTTON_LEFT:
 				return
 			if mb.pressed:
 				_touch = -1
-				_set(true)
+				_set_held(true)
 			elif _touch == -1:
 				_touch = -999
-				_set(false)
+				_set_held(false)
 
-	func _set(v: bool) -> void:
+	func _set_held(v: bool) -> void:
 		if held == v:
 			return
 		held = v
