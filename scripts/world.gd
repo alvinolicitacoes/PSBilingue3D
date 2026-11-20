@@ -148,13 +148,13 @@ func _build_dog() -> void:
 
 func _build_npcs() -> void:
 	var defs: Array = [
-		["Lia", "rosa", 1.10, "walker", 20.0, 1.0],
+		["Elly", "rosa", 1.10, "walker", 20.0, 1.0],
 		["Davi", "verde", 1.22, "walker", 140.0, -1.0],
-		["Laura", "branca", 1.02, "walker", 250.0, 1.0],
-		["Sofia", "amarela", 1.06, "stander", 0.0, 0.0],
+		["Ariel", "branca", 1.02, "walker", 250.0, 1.0],
+		["Alex", "amarela", 1.06, "stander", 0.0, 0.0],
 		["Theo", "roxa", 1.25, "stander", 0.0, 0.0],
 		["Caio", "azul", 1.30, "stander", 0.0, 0.0],
-		["Alice", "laranja", 1.10, "sitter", 0.0, 0.0],
+		["Noah", "laranja", 1.10, "sitter", 0.0, 0.0],
 		["Bento", "vermelha", 1.16, "sitter", 0.0, 0.0],
 	]
 	var stand_spots: Array = [Vector3(5.5, 0, 14.0), Vector3(-13.0, 0, -5.0), Vector3(2.5, 0, -25.5)]
