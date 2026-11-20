@@ -175,11 +175,12 @@ const FILL := [
 static func _phrases(level: int, count: int) -> Array:
 	var tiers := _tiers(level)
 	var out: Array = []
-	var phr: Array = PSNpc.PHRASES.duplicate()
+	var phr: Array = PSNpc.all_phrases()
+	phr = phr.filter(func(p): return tiers.has(int(p.get("level", 1))))
 	phr.shuffle()
 	var all_pt: Array = []
 	var all_en: Array = []
-	for p in PSNpc.PHRASES:
+	for p in PSNpc.all_phrases():
 		var d: Dictionary = p
 		all_pt.append(d["pt"])
 		all_en.append(d["en"])
