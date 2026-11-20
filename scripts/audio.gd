@@ -18,7 +18,7 @@ var tts_voice_en := ""
 var tts_voice_pt := ""
 var tts_enabled := true
 var tts_available := false
-var _voice_manifest: Dictionary = {}
+var _voice_manifests: Dictionary = {}
 var _voice_player: AudioStreamPlayer
 
 func _ready() -> void:
@@ -76,17 +76,21 @@ func _setup_tts() -> void:
 		push_warning("Nenhuma voz inglesa encontrada no sistema. Instale uma voz English em Configurações > Hora e idioma > Fala.")
 
 func _load_voice_manifest() -> void:
-	var manifest_path := "res://assets/voice/en/manifest.json"
-	if not FileAccess.file_exists(manifest_path):
-		return
-	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(manifest_path))
-	if data is Dictionary:
-		_voice_manifest = data.get("items", {})
+	for lang in ["en", "pt"]:
+		var manifest_path := "res://assets/voice/" + lang + "/manifest.json"
+		if not FileAccess.file_exists(manifest_path):
+			continue
+		var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(manifest_path))
+		if data is Dictionary:
+			_voice_manifests[lang] = data.get("items", {})
 
 func _play_recorded_voice(text: String, lang: String) -> bool:
-	if lang != "en" or not _voice_manifest.has(text):
+	if not _voice_manifests.has(lang):
 		return false
-	var path := "res://assets/voice/en/" + str(_voice_manifest[text])
+	var manifest: Dictionary = _voice_manifests[lang]
+	if not manifest.has(text):
+		return false
+	var path := "res://assets/voice/" + lang + "/" + str(manifest[text])
 	var stream: AudioStream = load(path) as AudioStream if ResourceLoader.exists(path) else null
 	if stream == null:
 		return false
@@ -137,7 +141,7 @@ static func speak(text: String, lang: String = "en") -> void:
 		inst._speak(text, lang)
 
 static func can_speak() -> bool:
-	return inst != null and inst.tts_enabled and (inst.tts_available or not inst._voice_manifest.is_empty())
+	return inst != null and inst.tts_enabled and (inst.tts_available or not inst._voice_manifests.is_empty())
 
 func _play_sfx(sound: String, volume_db: float, pitch: float) -> void:
 	var s := _load(sound)
