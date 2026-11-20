@@ -643,6 +643,9 @@ func _show_npc_dialogue(npc: PSNpc, phrase: Dictionary) -> void:
 		choice.pressed.connect(_answer_npc_dialogue.bind(option, str(phrase["pt"]), quiz_label, answer_buttons))
 	var replay := Button.new()
 	replay.text = "🔊 Ouvir em inglês"
+	replay.disabled = not PSAudio.can_speak()
+	if replay.disabled:
+		replay.tooltip_text = "Instale uma voz inglesa nas configurações de fala do sistema"
 	column.add_child(replay)
 	replay.pressed.connect(func(): PSAudio.speak(str(phrase["en"]), "en"))
 	var repeat_btn := Button.new()
@@ -974,6 +977,8 @@ func _open_options() -> void:
 	ss.value_changed.connect(func(v: float): audio.set_sfx_volume(v))
 	vb.add_child(ss)
 	vb.add_child(_check("Voz lendo as palavras em inglês", audio.tts_enabled, func(v: bool): audio.set_voice(v)))
+	if not audio.tts_available:
+		vb.add_child(PSUI.label("Pronúncia: voz inglesa não detectada no Windows. Instale uma voz em Configurações > Hora e idioma > Fala.", 17, Color("a13c2f")))
 	vb.add_child(_check("Ciclo de dia e noite", city.cycle_on, _on_day_cycle))
 	vb.add_child(_check("Sombras (desligue em celulares lentos)", city.sun.shadow_enabled, _on_shadows))
 	vb.add_child(_check("Corrigir direção dos modelos 3D (se estiverem de costas)", PSConfig.glb_flip, _on_glb_flip))
