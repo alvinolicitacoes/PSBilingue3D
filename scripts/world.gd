@@ -622,6 +622,26 @@ func _show_npc_dialogue(npc: PSNpc, phrase: Dictionary) -> void:
 	var translation := PSUI.label(str(phrase["pt"]), 22, Color("315e88"))
 	translation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	column.add_child(translation)
+	var quiz_label := PSUI.label("Qual é a tradução correta?", 21, Color("1d2b53"))
+	column.add_child(quiz_label)
+	var options: Array[String] = [str(phrase["pt"])]
+	var distractors: Array = PSNpc.all_phrases()
+	distractors.shuffle()
+	for candidate in distractors:
+		var translation_pt := str(candidate["pt"])
+		if not options.has(translation_pt):
+			options.append(translation_pt)
+		if options.size() >= 3:
+			break
+	options.shuffle()
+	var answer_buttons: Array[Button] = []
+	for option in options:
+		var choice := Button.new()
+		choice.text = option
+		choice.custom_minimum_size.y = 45
+		column.add_child(choice)
+		answer_buttons.append(choice)
+		choice.pressed.connect(_answer_npc_dialogue.bind(option, str(phrase["pt"]), quiz_label, answer_buttons))
 	var replay := Button.new()
 	replay.text = "🔊 Ouvir em inglês"
 	column.add_child(replay)
@@ -635,6 +655,18 @@ func _show_npc_dialogue(npc: PSNpc, phrase: Dictionary) -> void:
 	column.add_child(close_btn)
 	close_btn.pressed.connect(_close_overlay)
 	PSAudio.speak(str(phrase["en"]), "en")
+
+func _answer_npc_dialogue(selected: String, correct: String, feedback: Label, buttons: Array[Button]) -> void:
+	for choice in buttons:
+		choice.disabled = true
+	if selected == correct:
+		feedback.text = "Muito bem! Tradução correta."
+		feedback.modulate = Color("238b45")
+		PSAudio.sfx("coin")
+	else:
+		feedback.text = "Boa tentativa! A resposta é: " + correct
+		feedback.modulate = Color("d94a40")
+		PSAudio.sfx("back")
 
 func _hear_animal(a: Dictionary) -> void:
 	var id: String = a["id"]
