@@ -99,12 +99,13 @@ static func level_stars(mode: String, level: int) -> int:
 	var wins: Dictionary = load_data().get("wins", {})
 	return int(wins.get("%s_%d" % [mode, level], 0))
 
-## Maior nível liberado (1..10): o nível seguinte ao último concluído.
+## Libera o próximo nível somente quando os anteriores foram concluídos.
 static func unlocked_level(mode: String) -> int:
 	var top := 0
 	for l in range(1, 11):
-		if level_stars(mode, l) > 0:
-			top = l
+		if level_stars(mode, l) <= 0:
+			break
+		top = l
 	return mini(10, top + 1)
 
 static func mode_stars(mode: String) -> int:
