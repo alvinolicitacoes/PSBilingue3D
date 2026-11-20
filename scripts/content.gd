@@ -798,7 +798,7 @@ const SPELL := [
 	["elephant", "elefante"], ["bicycle", "bicicleta"], ["kitchen", "cozinha"], ["morning", "manhã"], ["chicken", "galinha"], ["unicorn", "unicórnio"],
 ]
 
-static func spelling_words(level: int, count: int = 8) -> Array:
+static func spelling_words(level: int, count: int = 10) -> Array:
 	var lo := 3
 	var hi := 3
 	if level <= 2:
