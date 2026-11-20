@@ -9,26 +9,70 @@ static var _loaded := false
 static func _default() -> Dictionary:
 	return {"stars": 0, "wins": {}, "best": {}, "profile": "Pietro", "settings": {}, "outfit": {}, "quests": {}, "flags": {}}
 
+const BACKUP_PATH := "user://psbilingue_progress.backup.json"
+const TEMP_PATH := "user://psbilingue_progress.tmp.json"
+
+static func _read_json(path: String) -> Dictionary:
+	if not FileAccess.file_exists(path):
+		return {}
+	var f := FileAccess.open(path, FileAccess.READ)
+	if f == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(f.get_as_text())
+	if parsed is Dictionary:
+		return parsed
+	return {}
+
 static func load_data() -> Dictionary:
 	if _loaded:
 		return _data
-	_loaded = true
+	var primary := _read_json(PATH)
+	if primary.is_empty():
+		primary = _read_json(BACKUP_PATH)
 	_data = _default()
-	if FileAccess.file_exists(PATH):
-		var f := FileAccess.open(PATH, FileAccess.READ)
-		if f != null:
-			var parsed: Variant = JSON.parse_string(f.get_as_text())
-			if parsed is Dictionary:
-				for k in parsed:
-					_data[k] = parsed[k]
+	for key in primary:
+		_data[key] = primary[key]
+	_loaded = true
 	return _data
 
 static func save_data(data: Dictionary = {}) -> void:
+	if not _loaded:
+		load_data()
 	if not data.is_empty():
 		_data = data
-	var f := FileAccess.open(PATH, FileAccess.WRITE)
-	if f != null:
-		f.store_string(JSON.stringify(_data, "  "))
+	var f := FileAccess.open(TEMP_PATH, FileAccess.WRITE)
+	if f == null:
+		push_error("PSProgress: falha ao abrir arquivo temporário: " + str(FileAccess.get_open_error()))
+		return
+	f.store_string(JSON.stringify(_data, "  "))
+	f.flush()
+	f.close()
+	var temp_data := _read_json(TEMP_PATH)
+	if temp_data.is_empty():
+		push_error("PSProgress: arquivo temporário inválido; progresso anterior preservado")
+		return
+	if FileAccess.file_exists(PATH) and not _read_json(PATH).is_empty():
+		DirAccess.copy_absolute(ProjectSettings.globalize_path(PATH), ProjectSettings.globalize_path(BACKUP_PATH))
+	var result := DirAccess.rename_absolute(ProjectSettings.globalize_path(TEMP_PATH), ProjectSettings.globalize_path(PATH))
+	if result != OK:
+		push_error("PSProgress: falha ao salvar progresso, código " + str(result))
+
+static func pronunciation_result(lang: String, level: int, phrase: String, score: float) -> void:
+	var d := load_data()
+	var records: Dictionary = d.get("pronunciation", {})
+	var key := lang + ":" + str(level) + ":" + phrase
+	var entry: Dictionary = records.get(key, {"attempts": 0, "best": 0.0})
+	entry["attempts"] = int(entry.get("attempts", 0)) + 1
+	entry["best"] = maxf(float(entry.get("best", 0.0)), clampf(score, 0.0, 1.0))
+	entry["last"] = clampf(score, 0.0, 1.0)
+	records[key] = entry
+	d["pronunciation"] = records
+	save_data()
+
+static func pronunciation_best(lang: String, level: int, phrase: String) -> float:
+	var records: Dictionary = load_data().get("pronunciation", {})
+	var entry: Dictionary = records.get(lang + ":" + str(level) + ":" + phrase, {})
+	return float(entry.get("best", 0.0))
 
 static func stars() -> int:
 	return int(load_data().get("stars", 0))
