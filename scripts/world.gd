@@ -590,8 +590,51 @@ func _do_interact() -> void:
 		prompt_action.call()
 
 func _talk_to(npc: PSNpc) -> void:
-	npc.talk()
+	if overlay != null or games != null:
+		return
+	var phrase: Dictionary = npc.next_phrase()
+	_show_npc_dialogue(npc, phrase)
 	_quest("talk")
+
+## Diálogo interativo bilíngue: painel acessível também por toque.
+## Mantém a lógica do NPC e os controles atuais; não depende de plugins externos.
+func _show_npc_dialogue(npc: PSNpc, phrase: Dictionary) -> void:
+	var ov := _make_overlay(0.65)
+	var center := CenterContainer.new()
+	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	ov.add_child(center)
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(560, 0)
+	panel.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	center.add_child(panel)
+	var margin := MarginContainer.new()
+	for side in ["left", "right", "top", "bottom"]:
+		margin.add_theme_constant_override("margin_" + side, 22)
+	panel.add_child(margin)
+	var column := VBoxContainer.new()
+	column.add_theme_constant_override("separation", 14)
+	margin.add_child(column)
+	var title := PSUI.label(npc.display_name + " • Conversa bilíngue", 29, Color("1d2b53"))
+	column.add_child(title)
+	var english := PSUI.label(str(phrase["en"]), 26, Color("1d2b53"))
+	english.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	column.add_child(english)
+	var translation := PSUI.label(str(phrase["pt"]), 22, Color("315e88"))
+	translation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	column.add_child(translation)
+	var replay := Button.new()
+	replay.text = "🔊 Ouvir em inglês"
+	column.add_child(replay)
+	replay.pressed.connect(func(): PSAudio.speak(str(phrase["en"]), "en"))
+	var repeat_btn := Button.new()
+	repeat_btn.text = "Próxima frase"
+	column.add_child(repeat_btn)
+	repeat_btn.pressed.connect(func(): _show_npc_dialogue(npc, npc.next_phrase()))
+	var close_btn := Button.new()
+	close_btn.text = "Voltar à cidade"
+	column.add_child(close_btn)
+	close_btn.pressed.connect(_close_overlay)
+	PSAudio.speak(str(phrase["en"]), "en")
 
 func _hear_animal(a: Dictionary) -> void:
 	var id: String = a["id"]
