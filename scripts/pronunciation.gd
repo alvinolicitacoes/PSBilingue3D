@@ -7,6 +7,7 @@ signal closed
 
 const NAVY := Color("1d2b53")
 const LEVEL_NAMES := ["Fácil", "Intermediário", "Desafio"]
+var _language := "en"
 var _level := 0
 var _index := 0
 var _phrases: Array = []
@@ -45,6 +46,13 @@ func _ready() -> void:
 	stack.add_theme_constant_override("separation", 12)
 	margin.add_child(stack)
 	stack.add_child(PSUI.label("Minha Pronúncia", 36, NAVY))
+	var language_row := HBoxContainer.new()
+	stack.add_child(language_row)
+	for lang in ["en", "pt"]:
+		var language_button := Button.new()
+		language_button.text = "🇺🇸 Inglês" if lang == "en" else "🇧🇷 Português"
+		language_row.add_child(language_button)
+		language_button.pressed.connect(_select_language.bind(lang))
 	var level_row := HBoxContainer.new()
 	stack.add_child(level_row)
 	for i in range(3):
@@ -117,6 +125,10 @@ func _setup_microphone() -> void:
 		_record_button.disabled = true
 		_status.text = "Microfone indisponível. Verifique a permissão de acesso ao microfone."
 
+func _select_language(lang: String) -> void:
+	_language = lang
+	_select_level(_level)
+
 func _select_level(value: int) -> void:
 	_stop_record()
 	_level = value
@@ -136,8 +148,8 @@ func _show_phrase() -> void:
 	_recorded = null
 	_listen_button.disabled = true
 	_evaluate_button.disabled = true
-	_title.text = "%d/10 • %s" % [_index + 1, str(_phrases[_index]["en"])]
-	_translation.text = str(_phrases[_index]["pt"])
+	_title.text = "%d/10 • %s" % [_index + 1, str(_phrases[_index][_language])]
+	_translation.text = str(_phrases[_index]["pt" if _language == "en" else "en"])
 	_status.text = "Ouça, grave sua voz e compare. A avaliação é feita pela própria criança com ajuda de um adulto."
 
 func _toggle_record() -> void:
@@ -186,8 +198,7 @@ func _evaluate_recording() -> void:
 	if not ClassDB.class_exists("VoskRecognizer") or not ClassDB.class_exists("VoskModel"):
 		_status.text = "Reconhecimento indisponível: instale o gdvosk e os modelos offline."
 		return
-	var language := "en"
-	var model_path := "res://assets/speech/vosk-model-small-en-us-0.15.vosk"
+	var model_path := "res://assets/speech/vosk-model-small-en-us-0.15.vosk" if _language == "en" else "res://assets/speech/vosk-model-small-pt-0.3.vosk"
 	if not ResourceLoader.exists(model_path):
 		_status.text = "Modelo inglês offline ausente. A correção não pode ser executada."
 		return
@@ -203,7 +214,7 @@ func _evaluate_recording() -> void:
 	recognizer.call("accept_stream", _recorded)
 	var result: Dictionary = recognizer.call("get_final_result")
 	var recognized := str(result.get("text", ""))
-	var expected := str(_phrases[_index]["en"])
+	var expected := str(_phrases[_index][_language])
 	var score := _word_similarity(expected, recognized)
 	if recognized.strip_edges().is_empty():
 		_status.text = "Não consegui identificar as palavras. Fale mais perto do microfone e tente novamente."
