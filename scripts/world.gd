@@ -604,7 +604,9 @@ func _show_npc_dialogue(npc: PSNpc, phrase: Dictionary) -> void:
 	center.set_anchors_preset(Control.PRESET_FULL_RECT)
 	ov.add_child(center)
 	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(560, 0)
+	panel.custom_minimum_size = Vector2(0, 0)
+	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	center.custom_minimum_size = Vector2(0, 0)
 	panel.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	center.add_child(panel)
 	var margin := MarginContainer.new()
@@ -619,16 +621,13 @@ func _show_npc_dialogue(npc: PSNpc, phrase: Dictionary) -> void:
 	var english := PSUI.label(str(phrase["en"]), 26, Color("1d2b53"))
 	english.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	column.add_child(english)
-	var translation := PSUI.label(str(phrase["pt"]), 22, Color("315e88"))
-	translation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	column.add_child(translation)
 	var quiz_label := PSUI.label("Qual é a tradução correta?", 21, Color("1d2b53"))
 	column.add_child(quiz_label)
 	var options: Array[String] = [str(phrase["pt"])]
 	var distractors: Array = PSNpc.all_phrases()
 	distractors.shuffle()
 	for candidate in distractors:
-		var translation_pt := str(candidate["pt"])
+		var translation_pt: String = str(candidate["pt"])
 		if not options.has(translation_pt):
 			options.append(translation_pt)
 		if options.size() >= 3:
