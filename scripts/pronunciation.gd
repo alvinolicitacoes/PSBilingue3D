@@ -91,7 +91,7 @@ func _ready() -> void:
 	_select_level(0)
 
 func _setup_microphone() -> void:
-	if not AudioServer.input_device_list().is_empty():
+	if not AudioServer.get_input_device_list().is_empty():
 		_bus_index = AudioServer.get_bus_index("Gravacao")
 		if _bus_index == -1:
 			AudioServer.add_bus()
