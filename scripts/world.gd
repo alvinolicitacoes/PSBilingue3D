@@ -648,6 +648,11 @@ func _show_npc_dialogue(npc: PSNpc, phrase: Dictionary) -> void:
 		replay.tooltip_text = "Instale uma voz inglesa nas configurações de fala do sistema"
 	column.add_child(replay)
 	replay.pressed.connect(func(): PSAudio.speak(str(phrase["en"]), "en"))
+	var replay_pt := Button.new()
+	replay_pt.text = "🔊 Ouvir em português"
+	replay_pt.disabled = not PSAudio.can_speak()
+	column.add_child(replay_pt)
+	replay_pt.pressed.connect(func(): PSAudio.speak(str(phrase["pt"]), "pt"))
 	var repeat_btn := Button.new()
 	repeat_btn.text = "Próxima frase"
 	column.add_child(repeat_btn)
