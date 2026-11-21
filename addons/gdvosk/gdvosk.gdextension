@@ -1,0 +1,39 @@
+[configuration]
+entry_symbol = "gdvosk_library_init"
+compatibility_minimum = 4.5
+
+[icons]
+SpeechRecognizer = "res://addons/gdvosk/icons/SpeechRecognizer.svg"
+
+[libraries]
+android.debug.arm32 = "res://addons/gdvosk/lib/android/arm32/libgdvosk-d.so"
+android.release.arm32 = "res://addons/gdvosk/lib/android/arm32/libgdvosk.so"
+android.debug.arm64 = "res://addons/gdvosk/lib/android/arm64/libgdvosk-d.so"
+android.release.arm64 = "res://addons/gdvosk/lib/android/arm64/libgdvosk.so"
+android.debug.x86_32 = "res://addons/gdvosk/lib/android/x86_32/libgdvosk-d.so"
+android.release.x86_32 = "res://addons/gdvosk/lib/android/x86_32/libgdvosk.so"
+android.debug.x86_64 = "res://addons/gdvosk/lib/android/x86_64/libgdvosk-d.so"
+android.release.x86_64 = "res://addons/gdvosk/lib/android/x86_64/libgdvosk.so"
+
+linux.debug.arm32 = "res://addons/gdvosk/lib/linux/arm32/libgdvosk-d.so"
+linux.release.arm32 = "res://addons/gdvosk/lib/linux/arm32/libgdvosk.so"
+linux.debug.arm64 = "res://addons/gdvosk/lib/linux/arm64/libgdvosk-d.so"
+linux.release.arm64 = "res://addons/gdvosk/lib/linux/arm64/libgdvosk.so"
+linux.debug.x86_32 = "res://addons/gdvosk/lib/linux/x86_32/libgdvosk-d.so"
+linux.release.x86_32 = "res://addons/gdvosk/lib/linux/x86_32/libgdvosk.so"
+linux.debug.x86_64 = "res://addons/gdvosk/lib/linux/x86_64/libgdvosk-d.so"
+linux.release.x86_64 = "res://addons/gdvosk/lib/linux/x86_64/libgdvosk.so"
+
+macos.debug = "res://addons/gdvosk/lib/macos/universal/libgdvosk-d.dylib"
+macos.release = "res://addons/gdvosk/lib/macos/universal/libgdvosk.dylib"
+
+windows.debug.x86_32 = "res://addons/gdvosk/lib/windows/x86_32/libgdvosk-d.dll"
+windows.release.x86_32 = "res://addons/gdvosk/lib/windows/x86_32/libgdvosk.dll"
+windows.debug.x86_64 = "res://addons/gdvosk/lib/windows/x86_64/libgdvosk-d.dll"
+windows.release.x86_64 = "res://addons/gdvosk/lib/windows/x86_64/libgdvosk.dll"
+
+web.debug.wasm32 = "res://addons/gdvosk/lib/web/wasm32/libgdvosk-d.so"
+web.release.wasm32 = "res://addons/gdvosk/lib/web/wasm32/libgdvosk.so"
+
+ios.debug = "res://addons/gdvosk/lib/ios/universal/libgdvosk-d.dylib"
+ios.release = "res://addons/gdvosk/lib/ios/universal/libgdvosk.dylib"

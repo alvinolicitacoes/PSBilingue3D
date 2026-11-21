@@ -1,0 +1,4 @@
+addons/gdvosk/lib/**/*.dll filter=lfs diff=lfs merge=lfs -text
+addons/gdvosk/lib/**/*.so filter=lfs diff=lfs merge=lfs -text
+addons/gdvosk/lib/**/*.dylib filter=lfs diff=lfs merge=lfs -text
+addons/gdvosk/lib/** filter=lfs diff=lfs merge=lfs -text
