@@ -25,6 +25,7 @@ var _listen_button: Button
 var _evaluate_button: Button
 var _recognizers: Dictionary = {}
 var _effect_index := -1
+var _closing := false
 var _models: Dictionary = {}
 const MODEL_PATHS := {"en": "res://assets/speech/vosk-model-small-en-us-0.15.vosk", "pt": "res://assets/speech/vosk-model-small-pt-0.3.vosk"}
 
@@ -35,6 +36,15 @@ func _ready() -> void:
 	bg.color = Color("e8f2eb")
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
+	# Botão fixo: permanece visível mesmo quando o painel excede a altura da tela.
+	var back := Button.new()
+	back.text = "← Voltar ao mapa"
+	back.custom_minimum_size = Vector2(185, 48)
+	back.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	back.position = Vector2(16, 12)
+	back.z_index = 10
+	add_child(back)
+	back.pressed.connect(_close_practice)
 	var center := CenterContainer.new()
 	center.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
@@ -101,12 +111,23 @@ func _ready() -> void:
 	var close := Button.new()
 	close.text = "Voltar à cidade"
 	stack.add_child(close)
-	close.pressed.connect(func():
-		_stop_record()
-		closed.emit()
-	)
+	close.pressed.connect(_close_practice)
 	_setup_microphone()
 	_select_level(0)
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()
+		_close_practice()
+
+func _close_practice() -> void:
+	if _closing:
+		return
+	_closing = true
+	_stop_record()
+	if _playback != null:
+		_playback.stop()
+	closed.emit()
 
 func _setup_microphone() -> void:
 	if not AudioServer.get_input_device_list().is_empty():
