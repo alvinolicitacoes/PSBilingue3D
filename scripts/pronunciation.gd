@@ -36,15 +36,6 @@ func _ready() -> void:
 	bg.color = Color("e8f2eb")
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
-	# Botão fixo: permanece visível mesmo quando o painel excede a altura da tela.
-	var back := Button.new()
-	back.text = "← Voltar ao mapa"
-	back.custom_minimum_size = Vector2(185, 48)
-	back.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	back.position = Vector2(16, 12)
-	back.z_index = 10
-	add_child(back)
-	back.pressed.connect(_close_practice)
 	var center := CenterContainer.new()
 	center.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
@@ -58,7 +49,17 @@ func _ready() -> void:
 	stack.custom_minimum_size = Vector2(520, 0)
 	stack.add_theme_constant_override("separation", 12)
 	margin.add_child(stack)
-	stack.add_child(PSUI.label("Minha Pronúncia", 36, NAVY))
+	var header := HBoxContainer.new()
+	stack.add_child(header)
+	var heading := PSUI.label("Minha Pronúncia", 30, NAVY)
+	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	header.add_child(heading)
+	var back := Button.new()
+	back.text = "← Voltar ao mapa"
+	back.custom_minimum_size = Vector2(190, 48)
+	back.mouse_filter = Control.MOUSE_FILTER_STOP
+	header.add_child(back)
+	back.pressed.connect(_close_practice)
 	var language_row := HBoxContainer.new()
 	stack.add_child(language_row)
 	for lang in ["en", "pt"]:
