@@ -1,19 +1,37 @@
-# Atividade Minha Pronúncia — microfone
+# Pronúncia bilíngue — GDVOSK offline
 
-O botão **🎤 Pronúncia** na cidade abre uma atividade com 3 níveis, 10 frases por nível, gravação local e reprodução.
+O jogo usa a extensão compilada em `addons/gdvosk/` e o script `scripts/pronunciation.gd`.
 
-## Windows
-- Autorize o acesso ao microfone em Configurações > Privacidade e segurança > Microfone.
-- No Godot, use F5 e abra **🎤 Pronúncia**.
-- Ouça a frase, grave sua voz, pare e reproduza.
+## Instalar os modelos (obrigatório)
+
+O carregador oficial do GDVOSK espera **arquivos ZIP renomeados para .vosk** (não pastas extraídas). Os ZIPs oficiais contêm uma pasta raiz com o mesmo nome do modelo; preserve essa estrutura.
+
+1. Baixe `vosk-model-small-en-us-0.15.zip` e `vosk-model-small-pt-0.3.zip` do site oficial Vosk.
+2. Copie os ZIPs para `assets/speech/`.
+3. Renomeie **somente a extensão** dos arquivos, sem descompactar:
+   - `assets/speech/vosk-model-small-en-us-0.15.vosk`
+   - `assets/speech/vosk-model-small-pt-0.3.vosk`
+4. Confirme que o Windows não acrescentou `.zip` oculto no final. Ative Exibir > Extensões de nomes de arquivo no Explorador.
+5. Abra o Godot 4.7 e aguarde a importação. O GDVOSK extrai o modelo no diretório `user://gdvosk/models/` ao carregá-lo pela primeira vez.
+
+**Atenção:** os modelos não estão incluídos no repositório nesta atualização. Sem eles, a correção por microfone não funciona. Para incluí-los no GitHub, use Git LFS caso necessário e considere a cota disponível.
+
+## Testar no Windows
+
+1. Permita o microfone em Configurações > Privacidade e segurança > Microfone.
+2. Abra a cena principal (F5), entre em **🎤 Pronúncia**, selecione inglês ou português e um nível.
+3. Ouça a frase, toque em **Começar gravação**, fale e toque em **Parar gravação**.
+4. Toque em **Corrigir minha fala**. O texto reconhecido e a correspondência de palavras aparecerão na tela.
+5. Repita a frase e confira se a melhor pontuação foi preservada após reiniciar o jogo.
 
 ## Android
-- Na predefinição de exportação Android do Godot, habilite a permissão **RECORD_AUDIO**.
-- Confirme que o APK solicita e recebe permissão de microfone no aparelho.
-- Teste com um dispositivo real; emuladores podem não ter microfone disponível.
 
-## Limitação importante
-Esta versão **não atribui nota de pronúncia**: grava e reproduz a voz para comparação, mas não reconhece automaticamente o que foi dito. Uma nota confiável exige integrar e validar um mecanismo de reconhecimento de fala e/ou avaliação fonética. Não use transcrição simples como se fosse uma avaliação fonética precisa.
+Habilite `RECORD_AUDIO` na exportação Android e teste em aparelho físico. A presença dos binários ARM64 no repositório não comprova que o APK foi exportado e testado com sucesso.
 
-## Áudio de referência
-Os botões de ouvir usam o sistema de voz do projeto. Para funcionar offline em qualquer aparelho, gere e inclua os pacotes de áudio de `assets/voice/en` e `assets/voice/pt`.
+## O que a pontuação significa
+
+A porcentagem é **correspondência de palavras transcritas**, não precisão fonética. Sotaques, ruído, idade e características do microfone podem influenciar a transcrição. Não use essa porcentagem para diagnosticar dificuldades de fala.
+
+## API usada
+
+O código usa a API de transcrição estática do GDVOSK: `VoskRecognizer.setup(model, sample_rate, null)`, `accept_stream(AudioStreamWAV)` e `get_final_result()`. A extensão aceita modelos como ZIP com extensão `.vosk`, conforme `VoskModelResourceLoader.cpp` do projeto oficial.
