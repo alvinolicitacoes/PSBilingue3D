@@ -645,8 +645,6 @@ func _show_npc_dialogue(npc: PSNpc, phrase: Dictionary) -> void:
 	var replay := Button.new()
 	replay.text = "🔊 Ouvir em inglês"
 	replay.disabled = not PSAudio.can_speak("en")
-	if replay.disabled:
-		replay.tooltip_text = "Áudio offline em inglês ainda não disponível"
 	column.add_child(replay)
 	replay.pressed.connect(func(): PSAudio.speak(str(phrase["en"]), "en"))
 	var replay_pt := Button.new()
