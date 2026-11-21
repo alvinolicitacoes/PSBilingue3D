@@ -25,6 +25,8 @@ var _listen_button: Button
 var _evaluate_button: Button
 var _recognizers: Dictionary = {}
 var _effect_index := -1
+var _models: Dictionary = {}
+const MODEL_PATHS := {"en": "res://assets/speech/vosk-model-small-en-us-0.15.vosk", "pt": "res://assets/speech/vosk-model-small-pt-0.3.vosk"}
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -160,7 +162,7 @@ func _show_phrase() -> void:
 	_evaluate_button.disabled = true
 	_title.text = "%d/10 • %s" % [_index + 1, str(_phrases[_index][_language])]
 	_translation.text = str(_phrases[_index]["pt" if _language == "en" else "en"])
-	_status.text = "Ouça, grave sua voz e compare. O reconhecimento de palavras é automático quando o motor offline estiver instalado."
+	_status.text = "Ouça, grave sua voz e compare. Ouça e grave. A correção compara as palavras reconhecidas, não a precisão dos sons."
 
 func _toggle_record() -> void:
 	if _recording_active:
@@ -186,7 +188,7 @@ func _stop_record() -> void:
 	_recording_active = false
 	_record_button.text = "🎤 Gravar novamente"
 	_listen_button.disabled = _recorded == null
-	_evaluate_button.disabled = _recorded == null or not ClassDB.class_exists("VoskRecognizer") or not ClassDB.class_exists("VoskModel")
+	_evaluate_button.disabled = _recorded == null or not _recognition_available()
 	_status.text = "Gravação concluída. Ouça sua voz e compare com a pronúncia."
 
 func _listen() -> void:
@@ -203,38 +205,62 @@ func _next() -> void:
 	_index = (_index + 1) % _phrases.size()
 	_show_phrase()
 
+func _recognition_available() -> bool:
+	return ClassDB.class_exists("VoskRecognizer") and ClassDB.class_exists("VoskModel") and ResourceLoader.exists(str(MODEL_PATHS[_language]))
+
+func _get_model() -> Resource:
+	if _models.has(_language):
+		return _models[_language]
+	var path := str(MODEL_PATHS[_language])
+	if not ResourceLoader.exists(path):
+		return null
+	var model := ResourceLoader.load(path)
+	if model != null:
+		_models[_language] = model
+	return model
+
 func _evaluate_recording() -> void:
-	if _recorded == null:
+	if _recorded == null or _phrases.is_empty():
 		return
 	if not ClassDB.class_exists("VoskRecognizer") or not ClassDB.class_exists("VoskModel"):
-		_status.text = "Reconhecimento indisponível: instale o gdvosk e os modelos offline."
+		_status.text = "GDVOSK não carregou. Confira as bibliotecas da extensão."
 		return
-	var model_path := "res://assets/speech/vosk-model-small-en-us-0.15.vosk" if _language == "en" else "res://assets/speech/vosk-model-small-pt-0.3.vosk"
-	if not ResourceLoader.exists(model_path):
-		_status.text = "Modelo offline ausente para o idioma escolhido."
+	if not _recognition_available():
+		_status.text = "Modelo %s ausente. Coloque o ZIP renomeado para .vosk em assets/speech." % _language.to_upper()
 		return
-	var model: Resource = load(model_path)
+	_evaluate_button.disabled = true
+	_status.text = "Reconhecendo sua fala offline..."
+	await get_tree().process_frame
+	var model := _get_model()
+	if model == null:
+		_status.text = "Não foi possível carregar o modelo de voz."
+		_evaluate_button.disabled = false
+		return
 	var recognizer: Object = ClassDB.instantiate("VoskRecognizer")
-	if recognizer == null or model == null:
-		_status.text = "Não foi possível iniciar o reconhecimento de fala."
+	if recognizer == null:
+		_status.text = "Falha ao criar reconhecedor GDVOSK."
+		_evaluate_button.disabled = false
 		return
 	var error_code: int = recognizer.call("setup", model, int(_recorded.mix_rate), null)
 	if error_code != OK:
-		_status.text = "Falha ao iniciar o reconhecedor."
+		_status.text = "Falha ao configurar o reconhecimento (código %d)." % error_code
+		_evaluate_button.disabled = false
 		return
 	recognizer.call("accept_stream", _recorded)
 	var result: Dictionary = recognizer.call("get_final_result")
-	var recognized := str(result.get("text", ""))
+	var recognized := str(result.get("text", "")).strip_edges()
 	var expected := str(_phrases[_index][_language])
-	var score := _word_similarity(expected, recognized)
-	if not recognized.strip_edges().is_empty():
-		PSProgress.pronunciation_result(_language, _level + 1, expected, score)
-	if recognized.strip_edges().is_empty():
-		_status.text = "Não consegui identificar as palavras. Fale mais perto do microfone e tente novamente."
-	elif score >= 0.85:
-		_status.text = "Muito bem! Entendi: '%s'. Correspondência de palavras: %d%%." % [recognized, roundi(score * 100)]
+	if recognized.is_empty():
+		_status.text = "Não identifiquei palavras. Fale perto do microfone e tente novamente."
 	else:
-		_status.text = "Ouvi: '%s'. A frase era: '%s'. Correspondência de palavras: %d%%. Vamos tentar novamente!" % [recognized, expected, roundi(score * 100)]
+		var score := _word_similarity(expected, recognized)
+		PSProgress.pronunciation_result(_language, _level + 1, expected, score)
+		var best := roundi(PSProgress.pronunciation_best(_language, _level + 1, expected) * 100.0)
+		if score >= 0.85:
+			_status.text = "Muito bem! Reconheci: '%s'. Palavras: %d%% (melhor: %d%%)." % [recognized, roundi(score * 100), best]
+		else:
+			_status.text = "Reconheci: '%s'. Esperado: '%s'. Palavras: %d%% (melhor: %d%%). Tente novamente!" % [recognized, expected, roundi(score * 100), best]
+	_evaluate_button.disabled = false
 
 func _word_similarity(expected: String, recognized: String) -> float:
 	var clean := RegEx.new()
