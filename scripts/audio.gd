@@ -77,7 +77,7 @@ func _setup_tts() -> void:
 
 func _load_voice_manifest() -> void:
 	for lang in ["en", "pt"]:
-		var manifest_path := "res://assets/voice/" + lang + "/manifest.json"
+		var manifest_path: String = "res://assets/voice/" + str(lang) + "/manifest.json"
 		if not FileAccess.file_exists(manifest_path):
 			continue
 		var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(manifest_path))
@@ -90,7 +90,7 @@ func _play_recorded_voice(text: String, lang: String) -> bool:
 	var manifest: Dictionary = _voice_manifests[lang]
 	if not manifest.has(text):
 		return false
-	var path := "res://assets/voice/" + lang + "/" + str(manifest[text])
+	var path: String = "res://assets/voice/" + lang + "/" + str(manifest[text])
 	var stream: AudioStream = load(path) as AudioStream if ResourceLoader.exists(path) else null
 	if stream == null:
 		return false
