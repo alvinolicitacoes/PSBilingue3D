@@ -140,8 +140,12 @@ static func speak(text: String, lang: String = "en") -> void:
 	if inst != null:
 		inst._speak(text, lang)
 
-static func can_speak() -> bool:
-	return inst != null and inst.tts_enabled and (inst.tts_available or not inst._voice_manifests.is_empty())
+static func can_speak(lang: String = "en") -> bool:
+	if inst == null or not inst.tts_enabled:
+		return false
+	if inst._voice_manifests.has(lang) and not (inst._voice_manifests[lang] as Dictionary).is_empty():
+		return true
+	return inst.tts_voice_en != "" if lang == "en" else inst.tts_voice_pt != ""
 
 func _play_sfx(sound: String, volume_db: float, pitch: float) -> void:
 	var s := _load(sound)
@@ -193,7 +197,7 @@ func _speak(text: String, lang: String) -> void:
 	if _play_recorded_voice(text, lang):
 		return
 	if not tts_available:
-		push_warning("Pronúncia indisponível: instale uma voz inglesa no sistema operacional.")
+		push_warning("Áudio da frase indisponível: pacote offline ainda não foi incorporado.")
 		return
 	var voice := tts_voice_en if lang == "en" else tts_voice_pt
 	if voice == "":
