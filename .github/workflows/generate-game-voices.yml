@@ -1,0 +1,48 @@
+name: Generate permanent bilingual game voices
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/generate-game-voices.yml'
+permissions:
+  contents: write
+jobs:
+  generate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install offline speech synthesizer
+        run: python -m pip install 'piper-tts>=1.2,<2'
+      - name: Download licensed Piper voices
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/voices
+          BASE=https://huggingface.co/rhasspy/piper-voices/resolve/main
+          for item in 'en/en_US/lessac/medium/en_US-lessac-medium' 'pt/pt_BR/faber/medium/pt_BR-faber-medium'; do
+            name="${item##*/}"
+            curl -fL --retry 3 "$BASE/$item.onnx?download=true" -o "/tmp/voices/$name.onnx"
+            curl -fL --retry 3 "$BASE/$item.onnx.json?download=true" -o "/tmp/voices/$name.onnx.json"
+          done
+      - name: Generate all bilingual dialogue voice files
+        run: |
+          python tools/generate_voice_pack.py \
+            --model-en /tmp/voices/en_US-lessac-medium.onnx \
+            --model-pt /tmp/voices/pt_BR-faber-medium.onnx
+      - name: Commit permanent WAV files and manifests
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/voice/en assets/voice/pt
+          if ! git diff --cached --quiet; then
+            git commit -m "Bundle permanent offline English and Portuguese dialogue voices"
+            git push origin HEAD:main
+          fi
